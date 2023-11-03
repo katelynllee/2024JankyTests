@@ -14,15 +14,15 @@ import frc.robot.subsystems.ChassisSubsystem;
 
 
 
-public class AutoAlignment extends CommandBase {
-  ChassisSubsystem chassis;
-  LimelightSubsystem limelight;
-  BooleanSupplier alignVal;
-  boolean alignBool;
+public class AngleAlignment extends CommandBase {
+  private ChassisSubsystem chassis;
+  private LimelightSubsystem limelight;
+  private BooleanSupplier alignVal;
+  private boolean alignBool;
 
   double leftCommand, rightCommand;
   /** Creates a new AutoAlignment. */
-  public AutoAlignment(BooleanSupplier alignVal, LimelightSubsystem limelight, ChassisSubsystem chassis) {
+  public AngleAlignment(BooleanSupplier alignVal, LimelightSubsystem limelight, ChassisSubsystem chassis) {
     this.alignVal = alignVal;
     alignBool = alignVal.getAsBoolean();
     this.limelight = limelight;
@@ -30,6 +30,7 @@ public class AutoAlignment extends CommandBase {
    
     addRequirements(limelight);
     addRequirements(chassis);
+    
   }
 
 
@@ -42,6 +43,7 @@ public class AutoAlignment extends CommandBase {
    public void execute() {
      //use limelight values in chassis
     if (alignBool = true){
+      limelight.alignAngle();
       leftCommand =  limelight.getLeftCommand();
       rightCommand = limelight.getRightCommand();
       
