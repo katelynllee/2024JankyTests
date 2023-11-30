@@ -41,7 +41,7 @@ public class ChassisSubsystem extends SubsystemBase {
     differentialDrive = new DifferentialDrive(rightSide, leftSide);
   }
 
-  public void Drive(double leftSpeed, double rightSpeed){
+  public void driveChassis(double leftSpeed, double rightSpeed){
     differentialDrive.tankDrive(Math.pow(leftSpeed,1), Math.pow(rightSpeed, 1));
   }
 
