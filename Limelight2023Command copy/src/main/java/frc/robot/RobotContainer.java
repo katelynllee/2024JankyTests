@@ -7,14 +7,17 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Drive;
-import frc.robot.commands.ExampleCommand;
+// import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+// import edu.wpi.first.wpilibj.XboxController.Button; 
+// import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ChassisSubsystem;
-import frc.robot.commands.AutoAlignment;
+import frc.robot.commands.AngleAlignment;
+import frc.robot.commands.DistAlignment;
 import frc.robot.subsystems.LimelightSubsystem;
 
 /**
@@ -25,55 +28,70 @@ import frc.robot.subsystems.LimelightSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private static final LimelightSubsystem limelight = new LimelightSubsystem();
   private static final ChassisSubsystem chassis = new ChassisSubsystem();
+
+  public static final AngleAlignment angleAlignment = new AngleAlignment(limelight);
+  public static final DistAlignment  distAlignment = new DistAlignment(limelight);
+
   private final Joystick leftJoystick = new Joystick(0);
   private final Joystick rightJoystick = new Joystick(1);
-  private static final LimelightSubsystem limelight = new LimelightSubsystem();
+  
     
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  
+  //Align Button for Limelight
+  private final JoystickButton angleAlignButton = 
+      new JoystickButton(leftJoystick, 9); //second value of constructor should be button number
+
+  private final JoystickButton distAlignButton = 
+      new JoystickButton(leftJoystick, 8); //second value of constructor should be button number
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    //put setDefaultCommand in constructor, not in configure bindings
+    chassis.setDefaultCommand(new Drive(chassis, rightJoystick.getY(), leftJoystick.getY()));
+    
+
+  }
+  
+  /** 
+  * assigns commands to button on controller
+  */
+  private void configureBindings() { 
+
+    angleAlignButton.whileTrue(new Drive(chassis, angleAlignment.getAngleLeftCommand(), angleAlignment.getAngleRightCommand()));
+    distAlignButton.whileTrue(new Drive(chassis, distAlignment.getDistLeftCommand(), distAlignment.getDistRightCommand()));
+
+    /** 
+    * Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    * cancelling on release.
+    */
+    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    
+    //cannot set another setDefaultCommand -> use whileTrue() function 
+    //chassis.setDefaultCommand(new AngleAlignment(m_driverController.rightTrigger(0.5), limelight, chassis));
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
+   * Allows access of subystems in other subsystems 
    */
+  // public static ChassisSubsystem getChassis() { 
+  //   return chassis; 
+  // }
 
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-    chassis.setDefaultCommand(new AutoAlignment(m_driverController.rightTrigger(0.5), limelight, chassis));
-    chassis.setDefaultCommand(new Drive(chassis, rightJoystick.getY(), leftJoystick.getY()));
-  }
-
-  //Allows access of subystems in other subsystems 
-  public static ChassisSubsystem getChassis() { 
-    return chassis; 
-  }
-
-  public static LimelightSubsystem getLimelight() { 
-    return limelight; 
-  }
-
+  // public static LimelightSubsystem getLimelight() { 
+  //   return limelight; 
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

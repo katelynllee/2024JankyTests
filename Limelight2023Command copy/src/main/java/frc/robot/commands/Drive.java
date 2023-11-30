@@ -11,6 +11,7 @@ public class Drive extends CommandBase {
   ChassisSubsystem chassis;
   double leftJoystick;
   double rightJoystick;
+  /** Creates subsystem values for command*/
   public Drive(ChassisSubsystem chassis, double leftJoystick, double rightJoystick) {
     this.chassis = chassis;
     this.leftJoystick = leftJoystick;
