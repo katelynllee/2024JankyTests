@@ -67,6 +67,7 @@ public class AngleAlignment extends CommandBase {
   * @return value of leftCommand, double
   */
   public double getAngleLeftCommand(){
+    alignAngle();
     return leftCommand;
   }
 
@@ -76,14 +77,16 @@ public class AngleAlignment extends CommandBase {
   */
 
   public double getAngleRightCommand(){
+    alignAngle();
     return rightCommand;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    alignAngle();
-    
+  
+  //alignAngle() //commented out because it doesn't make sesne to getAngleRightCommand before getting correct left/right command
+  
   //use limelight values in chassis
   // if (alignBool = true){
   //   leftCommand =  limelight.getLeftCommand();

@@ -42,6 +42,7 @@ public class DistAlignment extends CommandBase {
   * @return value of leftCommand, double
   */
   public double getDistLeftCommand(){
+    adjustDistance();
     return leftCommand;
   }
 
@@ -51,6 +52,7 @@ public class DistAlignment extends CommandBase {
   */
 
   public double getDistRightCommand(){
+    adjustDistance();
     return rightCommand;
   }
 
@@ -59,7 +61,7 @@ public class DistAlignment extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    adjustDistance();
+    //adjustDistance();
   }
 
   // Called once the command ends or is interrupted.
